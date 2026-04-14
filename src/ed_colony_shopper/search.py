@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from datetime import timedelta
 
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chromium.options import ChromiumOptions
 from selenium.webdriver.common.by import By
 
 from ed_colony_shopper.inara import MAPPING, URL
@@ -51,7 +53,9 @@ def search_inara(system: str, commodity: str, restrict_age: bool = False, strict
     )
     logger.info(f"Inara URL: {inara_url}")
     logger.info(f"Searching Inara for {commodity} near {system}...")
-    driver = webdriver.Chrome()
+    options = Options()
+    options.add_argument("headless")
+    driver = webdriver.Chrome(options=options)
     driver.get(inara_url)
     data_rows = driver.find_elements(By.CSS_SELECTOR, "#DataTables_Table_0_wrapper tbody tr")
     cell_data: list[list[str]] = [[cell.text for cell in row.find_elements(By.CSS_SELECTOR, "td")] for row in data_rows]
