@@ -10,10 +10,10 @@ def main():
     basicConfig(level=INFO, format="[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s")
     logger.info("Starting ...")
     system, needed_commodities = collect_needed_commodities()
-    needed_most: tuple[str, int] = '', 0
+    needed_most: tuple[str, list[int]] = '', [0, 0]
     for commodity in needed_commodities:
-        if needed_commodities[commodity][0] > needed_most[1]:
-            needed_most = commodity, needed_commodities[commodity][0]
+        if needed_commodities[commodity][0] > needed_most[1][0]:
+            needed_most = commodity, needed_commodities[commodity]
     markets: list[Market] = search_inara(system, needed_most[0], strict_star_dist=True)
     oldest_market = Market("", "", 0, 0.0, 0, 0, timedelta(0))
     cheapest_market = Market("", "", 0, 0.0, 0, 1_000_000_000, timedelta(0))
