@@ -9,7 +9,7 @@ def market_connector_data() -> Path:
     return Path("~/.var/app/io.edcd.EDMarketConnector/data/EDMarketConnector").expanduser()
 
 def colony_data() -> Path:
-    # if EDMC inoperable not installed:
+    # if EDMC inoperable or not installed:
         # todo: own storage
     return market_connector_data() / "colonization" / "constructions.json"
 

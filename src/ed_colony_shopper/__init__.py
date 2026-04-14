@@ -6,9 +6,9 @@ from ed_colony_shopper.search import search_inara, Market
 
 
 def main():
-    logger = getLogger("ed_colony_shopper")
+    logger = getLogger("E:D Colony Shopper")
     basicConfig(level=INFO, format="[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s")
-    logger.info("Starting ed_colony_shopper ...")
+    logger.info("Starting ...")
     system, needed_commodities = collect_needed_commodities()
     needed_most: tuple[str, int] = '', 0
     for commodity in needed_commodities:
