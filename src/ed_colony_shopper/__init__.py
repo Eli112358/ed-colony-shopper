@@ -1,6 +1,8 @@
 from datetime import timedelta
 from logging import getLogger, basicConfig, INFO
 
+import xerox
+
 from ed_colony_shopper.needed import collect_needed_commodities
 from ed_colony_shopper.search import search_inara, Market
 
@@ -22,6 +24,12 @@ def main():
             cheapest_market = market
         if market.age > oldest_market.age:
             oldest_market = market
-    logger.info(f"Oldest market: {oldest_market}")
-    logger.info(f"Cheapest market: {cheapest_market}")
-
+    target_market = cheapest_market
+    if oldest_market.age > timedelta(days=7):
+        target_market = oldest_market
+    profit_margin = (100 * (needed_most[1][1] - target_market.price) / needed_most[1][0])
+    logger.info(f"Target market is {target_market.station} in the {target_market.system} system")
+    logger.info(f"Profit margin: {profit_margin:.2f}%")
+    logger.info(f"Need {needed_most[1][0]} more {needed_most[0]}")
+    xerox.copy(target_market.system)
+    logger.info("Target system name has been copied into clipboard")
