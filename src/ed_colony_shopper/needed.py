@@ -15,6 +15,10 @@ def colony_data() -> Path:
 
 
 def collect_needed_commodities() -> tuple[str, dict[str, list[int]]]:
+    """
+    :return:
+    A tuple of commodity name, a list of remaining and payment
+    """
     logger: Logger = getLogger('needed_commodities')
     logger.info("Collecting needed commodities")
     # if EDMC inoperable or not installed:
