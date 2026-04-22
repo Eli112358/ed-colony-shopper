@@ -30,6 +30,15 @@ def colony_data() -> Path:
     return market_connector_data() / "colonization" / "constructions.json"
 
 
+def parse_commodity(commodity_data: dict[str, str | int], quantities: bool = True) -> Commodity:
+    name: str = str(commodity_data["commodity"])
+    required: int = int(commodity_data["required"]) if quantities else 0
+    provided: int = int(commodity_data["provided"]) if quantities else 0
+    payment: int = int(commodity_data["payment"])
+    needed: int = int(commodity_data["required"]) - int(commodity_data["provided"]) if quantities else 0
+    return Commodity(name, required, provided, payment, needed)
+
+
 def collect_needed_commodities() -> tuple[str, dict[str, list[int]]]:
     """
     :return:
