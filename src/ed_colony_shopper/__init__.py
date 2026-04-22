@@ -28,7 +28,7 @@ def main():
     if oldest_market.age > timedelta(days=7):
         target_market = oldest_market
     profit_margin = (100 * (needed_most[1][1] - target_market.price) / needed_most[1][0])
-    logger.info(f"Target market is {target_market.station} in the {target_market.system} system")
+    logger.info(f'Target market is "{target_market.station}" in the "{target_market.system}" system')
     logger.info(f"Profit margin: {profit_margin:.2f}%")
     logger.info(f"Need {needed_most[1][0]} more {needed_most[0]}")
     xerox.copy(target_market.system)

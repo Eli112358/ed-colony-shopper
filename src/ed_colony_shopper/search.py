@@ -56,7 +56,7 @@ def search_inara(system: str, commodity: str, include_surface: bool = False, res
         system=system.replace(" ", "+"),
     )
     logger.info(f"Inara URL: {inara_url}")
-    logger.info(f"Searching Inara for {commodity} near {system}...")
+    logger.info(f'Searching Inara for "{commodity}" near "{system}"...')
     options = Options()
     options.add_argument("headless")
     driver = webdriver.Chrome(options=options)
