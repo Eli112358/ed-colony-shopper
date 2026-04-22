@@ -54,26 +54,14 @@ def reduce_commodities(required_commodities: list[dict[str, Commodity]]) -> dict
     return needed_commodities
 
 
-def collect_needed_commodities() -> tuple[str, dict[str, list[int]]]:
-    """
-    :return:
-    A tuple of commodity name, a list of remaining and payment
-    """
+def collect_needed_commodities() -> tuple[str, dict[str, Commodity]]:
     logger: Logger = getLogger('needed_commodities')
     logger.info("Collecting needed commodities")
     # if EDMC inoperable or not installed:
         # todo: manual mode
         # todo: save results to own storage
-    commodities: dict[str, list[int]] = {}
     constructions: list[dict[str, Any]] = json.load(open(colony_data()))
-    system: str = ""
-    for construction in constructions:
-        construction: dict[str, Any]
-        if not system:
-            system = construction["system"]
-        required: dict[str, dict[str, Any]] = construction["required"]
-        for commodity in required:
-            if commodity not in commodities:
-                commodities[commodity] = [0, required[commodity]["payment"]]
-            commodities[commodity][0] += required[commodity]["required"] - required[commodity]["provided"]
-    return system, commodities
+    system: str = constructions[0]["system"]
+    required_commodities: list[dict[str, Commodity]] = collect_required(constructions)
+    needed_commodities: dict[str, Commodity] = reduce_commodities(required_commodities)
+    return system, needed_commodities
