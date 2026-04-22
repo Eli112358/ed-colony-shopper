@@ -1,5 +1,5 @@
 from datetime import timedelta
-from logging import getLogger, basicConfig, INFO
+from logging import getLogger, basicConfig, INFO, Logger
 
 import xerox
 
@@ -7,9 +7,13 @@ from ed_colony_shopper.needed import collect_needed_commodities, Commodity
 from ed_colony_shopper.search import search_inara, Market
 
 
-def main():
-    logger = getLogger("E:D Colony Shopper")
+def init_logger() -> Logger:
     basicConfig(level=INFO, format="[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s")
+    return getLogger("E:D Colony Shopper")
+
+
+def main():
+    logger = init_logger()
     logger.info("Starting ...")
     system, needed_commodities = collect_needed_commodities()
     needed_most: tuple[str, Commodity] = '', Commodity('', 0, 0, 0, 0)
