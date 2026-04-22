@@ -55,7 +55,7 @@ def reduce_commodities(required_commodities: list[dict[str, Commodity]]) -> dict
 
 
 def collect_needed_commodities() -> tuple[str, dict[str, Commodity]]:
-    logger: Logger = getLogger('needed_commodities')
+    logger: Logger = getLogger('Commodities')
     logger.info("Collecting needed commodities")
     # if EDMC inoperable or not installed:
         # todo: manual mode
