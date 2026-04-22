@@ -1,8 +1,11 @@
 import json
 from dataclasses import dataclass
+from functools import reduce
 from logging import getLogger, Logger
 from pathlib import Path
 from typing import Any
+
+from ed_colony_shopper.inara import MAPPING
 
 
 @dataclass
@@ -41,6 +44,14 @@ def parse_commodity(commodity_data: dict[str, str | int], quantities: bool = Tru
 
 def collect_required(constructions: list[dict[str, Any]]) -> list[dict[str, Commodity]]:
     return [{commodity_data["commodity"]: parse_commodity(commodity_data) for commodity_data in construction["required"].values()} for construction in constructions]
+
+
+def reduce_commodities(required_commodities: list[dict[str, Commodity]]) -> dict[str, Commodity]:
+    initial_commodities: dict[str, Commodity] = {commodity_name: Commodity(commodity_name, 0, 0, 0, 0) for commodity_name in MAPPING}
+    needed_commodities: dict[str, Commodity] = reduce(lambda x, y: {k: x[k] + y.get(k) for k in x}, required_commodities, initial_commodities)
+    commodities: list[Commodity] = list(filter(lambda commodity: commodity.needed > 0, needed_commodities.values()))
+    needed_commodities: dict[str, Commodity] = {c.name: c for c in commodities}
+    return needed_commodities
 
 
 def collect_needed_commodities() -> tuple[str, dict[str, list[int]]]:
