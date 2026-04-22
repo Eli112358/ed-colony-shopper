@@ -1,4 +1,4 @@
-URL: str = "https://inara.cz/elite/commodities/?formbrief=1&pi1=1&pa1%5B%5D={commodity_id}&ps1={system}&pi10=3&pi11={max_star_dist}&pi3=3&pi9={max_station_dist}&pi4=1&pi8=1&pi13=2&pi5={max_age}&pi12=0&pi7={min_supply}&pi14=0&ps3="
+URL: str = "https://inara.cz/elite/commodities/?formbrief=1&pi1=1&pa1%5B%5D={commodity_id}&ps1={system}&pi10=3&pi11={max_star_dist}&pi3=3&pi9={max_station_dist}&pi4={include_surface}&pi8=1&pi13=2&pi5={max_age}&pi12=0&pi7={min_supply}&pi14=0&ps3="
 
 # copied from DaftMav's Google Sheet
 # todo: get dynamically

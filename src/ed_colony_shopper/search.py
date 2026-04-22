@@ -44,11 +44,12 @@ def parse_age(time_str: str) -> timedelta:
         case _:
             return timedelta()
 
-def search_inara(system: str, commodity: str, restrict_age: bool = False, strict_star_dist: bool = False) -> list[Market]:
+def search_inara(system: str, commodity: str, include_surface: bool = False, restrict_age: bool = False, strict_star_dist: bool = False) -> list[Market]:
     logger = logging.getLogger("Inara")
     commodity_id: int = MAPPING[commodity]
     inara_url = URL.format(
         commodity_id=commodity_id,
+        include_surface=0 if include_surface else 1,
         max_star_dist=MAX_STAR_DISTANCE,
         max_station_dist=MAX_STATION_DISTANCE,
         min_supply=MIN_SUPPLY,
