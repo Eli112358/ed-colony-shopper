@@ -50,13 +50,12 @@ def collect_needed_commodities() -> tuple[str, dict[str, list[int]]]:
         # todo: manual mode
         # todo: save results to own storage
     commodities: dict[str, list[int]] = {}
-    constructions: dict[str, Any] = json.load(open(colony_data()))
+    constructions: list[dict[str, Any]] = json.load(open(colony_data()))
     system: str = ""
     for construction in constructions:
         construction: dict[str, Any]
         if not system:
             system = construction["system"]
-        construction: dict[str, Any]
         required: dict[str, dict[str, Any]] = construction["required"]
         for commodity in required:
             if commodity not in commodities:
