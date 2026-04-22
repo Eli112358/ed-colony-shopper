@@ -29,16 +29,20 @@ class Market:
     age: timedelta
 
 def parse_age(time_str: str) -> timedelta:
-    days, hours, minutes = 0, 0, 0
-    parts: list[str] = time_str.split(" ")
-    if parts[1].startswith("day"):
-        days = int(parts[0])
-    elif parts[1].startswith("hour"):
-        hours = int(parts[0])
-    elif parts[1].startswith("minute"):
-        minutes = int(parts[0])
-    age: timedelta = timedelta(days=days, hours=hours, minutes=minutes)
-    return age
+    parts = time_str.split(" ")
+    value = int(parts[0]) if len(parts) > 1 else 0
+    units = parts[1] if len(parts) > 1 else ""
+    match units.rstrip("s"):
+        case "day":
+            return timedelta(days=value)
+        case "hour":
+            return timedelta(hours=value)
+        case "minute":
+            return timedelta(minutes=value)
+        case "second":
+            return timedelta(seconds=value)
+        case _:
+            return timedelta()
 
 def search_inara(system: str, commodity: str, restrict_age: bool = False, strict_star_dist: bool = False) -> list[Market]:
     logger = logging.getLogger("Inara")
