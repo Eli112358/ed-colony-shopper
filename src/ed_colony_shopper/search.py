@@ -1,15 +1,14 @@
-# todo: get from configurable Google Sheet (by DaftMav)
 import logging
 from dataclasses import dataclass
 from datetime import timedelta
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chromium.options import ChromiumOptions
 from selenium.webdriver.common.by import By
 
 from ed_colony_shopper.inara import MAPPING, URL
 
+# todo: get from configurable Google Sheet (by DaftMav)
 MAX_STAR_DISTANCE: int = 30
 MAX_STATION_DISTANCE: int = 2000
 MIN_SUPPLY: int = 1000
