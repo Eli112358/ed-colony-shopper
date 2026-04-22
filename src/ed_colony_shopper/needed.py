@@ -1,7 +1,23 @@
 import json
+from dataclasses import dataclass
 from logging import getLogger, Logger
 from pathlib import Path
 from typing import Any
+
+
+@dataclass
+class Commodity:
+    name: str
+    required: int
+    provided: int
+    payment: int
+    needed: int
+
+    def __add__(self, other: Commodity) -> Commodity:
+        if not other:
+            return self
+        payment: int = max(self.payment, other.payment)
+        return Commodity(self.name, self.required, self.provided, payment, self.needed + other.needed)
 
 
 def market_connector_data() -> Path:
