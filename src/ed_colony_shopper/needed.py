@@ -39,6 +39,10 @@ def parse_commodity(commodity_data: dict[str, str | int], quantities: bool = Tru
     return Commodity(name, required, provided, payment, needed)
 
 
+def collect_required(constructions: list[dict[str, Any]]) -> list[dict[str, Commodity]]:
+    return [{commodity_data["commodity"]: parse_commodity(commodity_data) for commodity_data in construction["required"].values()} for construction in constructions]
+
+
 def collect_needed_commodities() -> tuple[str, dict[str, list[int]]]:
     """
     :return:
