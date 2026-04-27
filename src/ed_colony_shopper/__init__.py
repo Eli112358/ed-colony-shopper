@@ -9,13 +9,7 @@ from ed_colony_shopper.needed import collect_needed_commodities, Commodity
 from ed_colony_shopper.search import search_inara, Market
 
 PROJECT_NAME: str = "ed_colony_shopper"
-SERVER_MAINTENANCE_WEEKDAY: int = 3 # Thursday
-
-
-@cache
-def get_days_since_weekly_maintenance() -> int:
-    current_weekday = datetime.now().weekday()
-    return (7 + current_weekday - SERVER_MAINTENANCE_WEEKDAY) % 7
+SERVER_MAINTENANCE_WEEKDAY: int = 3  # Thursday
 
 
 def get_age_message(age: timedelta) -> tuple[int | str, str]:
@@ -30,19 +24,6 @@ def get_age_message(age: timedelta) -> tuple[int | str, str]:
     if hours > 0:
         return hours, "hours"
     return minutes, "minutes"
-
-
-def init_logger() -> Logger:
-    basicConfig(level=INFO, format="[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s")
-    return getLogger("E:D Colony Shopper")
-
-
-def get_system_and_commodity() -> tuple[str, Commodity]:
-    system, needed_commodities = collect_needed_commodities()
-    sorted_commodities: list[Commodity] = list(needed_commodities.values())
-    sorted_commodities.sort(key=lambda c: c.needed, reverse=True)
-    commodity_needed_most: Commodity = sorted_commodities[0]
-    return system, commodity_needed_most
 
 
 def get_cheapest_and_oldest(commodity_needed_most: Commodity, system: str) -> tuple[Market, Market]:
@@ -61,6 +42,25 @@ def get_commodity_and_market() -> tuple[Commodity, Market]:
     cheapest_market, oldest_market = get_cheapest_and_oldest(commodity_needed_most, system)
     use_oldest: bool = oldest_market.age.days > get_days_since_weekly_maintenance()
     return commodity_needed_most, oldest_market if use_oldest else cheapest_market
+
+
+@cache
+def get_days_since_weekly_maintenance() -> int:
+    current_weekday = datetime.now().weekday()
+    return (7 + current_weekday - SERVER_MAINTENANCE_WEEKDAY) % 7
+
+
+def get_system_and_commodity() -> tuple[str, Commodity]:
+    system, needed_commodities = collect_needed_commodities()
+    sorted_commodities: list[Commodity] = list(needed_commodities.values())
+    sorted_commodities.sort(key=lambda c: c.needed, reverse=True)
+    commodity_needed_most: Commodity = sorted_commodities[0]
+    return system, commodity_needed_most
+
+
+def init_logger() -> Logger:
+    basicConfig(level=INFO, format="[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s")
+    return getLogger("E:D Colony Shopper")
 
 
 def main():
