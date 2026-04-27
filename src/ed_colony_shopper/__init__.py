@@ -32,19 +32,23 @@ def get_system_and_commodity(logger: Logger) -> tuple[str, Commodity]:
     return system, commodity_needed_most
 
 
+def get_cheapest_and_oldest(commodity_needed_most: Commodity, system: str) -> tuple[Market, Market]:
+    markets: list[Market] = search_inara(system, commodity_needed_most.name, strict_star_dist=True)
+    if len(markets) == 0:
+        markets = search_inara(system, commodity_needed_most.name, include_surface=True, strict_star_dist=True)
+    markets.sort(key=lambda m: m.age, reverse=True)
+    oldest_market: Market = markets[0]
+    markets.sort(key=lambda m: m.price)
+    cheapest_market: Market = markets[0]
+    return cheapest_market, oldest_market
+
+
 def main():
     logger = init_logger()
     logger.info("Starting ...")
     logger.info(f"It has been {get_days_since_weekly_maintenance()} days since weekly server maintenance")
     system, commodity_needed_most = get_system_and_commodity(logger)
-    markets: list[Market] = search_inara(system, commodity_needed_most.name, strict_star_dist=True)
-    oldest_market = Market("", "", 0, 0.0, 0, 0, timedelta(0))
-    cheapest_market = Market("", "", 0, 0.0, 0, 1_000_000_000, timedelta(0))
-    for market in markets:
-        if market.price < cheapest_market.price:
-            cheapest_market = market
-        if market.age > oldest_market.age:
-            oldest_market = market
+    cheapest_market, oldest_market = get_cheapest_and_oldest(commodity_needed_most, system)
     target_market = cheapest_market
     if oldest_market.age > timedelta(days=7):
         target_market = oldest_market
