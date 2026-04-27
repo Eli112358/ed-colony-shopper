@@ -16,6 +16,20 @@ def get_days_since_weekly_maintenance() -> int:
     return (7 + current_weekday - SERVER_MAINTENANCE_WEEKDAY) % 7
 
 
+def get_age_message(age: timedelta) -> tuple[int | str, str]:
+    if age.days > 0:
+        return age.days, "days"
+    if age.seconds < 1:
+        return "now", ""
+    minutes: int = age.seconds // 60
+    if minutes < 1:
+        return age.seconds, "seconds"
+    hours: int = minutes // 60
+    if hours > 0:
+        return hours, "hours"
+    return minutes, "minutes"
+
+
 def init_logger() -> Logger:
     basicConfig(level=INFO, format="[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s")
     return getLogger("E:D Colony Shopper")
@@ -56,5 +70,6 @@ def main():
     logger.info(f'Target market is "{market.station}" in the "{market.system}" system')
     logger.info(f"Profit margin: {profit_margin:.2f}%")
     logger.info(f"Need {commodity.needed} more {commodity.name}")
+    logger.info("Data age: {} {}".format(*get_age_message(market.age)))
     xerox.copy(market.system)
     logger.info("Target system name has been copied into clipboard")
