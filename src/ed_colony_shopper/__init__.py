@@ -21,13 +21,10 @@ def init_logger() -> Logger:
     return getLogger("E:D Colony Shopper")
 
 
-def get_system_and_commodity(logger: Logger) -> tuple[str, Commodity]:
+def get_system_and_commodity() -> tuple[str, Commodity]:
     system, needed_commodities = collect_needed_commodities()
     sorted_commodities: list[Commodity] = list(needed_commodities.values())
     sorted_commodities.sort(key=lambda c: c.needed, reverse=True)
-    logger.debug("Sorted commodities:")
-    for commodity in sorted_commodities:
-        logger.debug(f"Commodity: {commodity.name}, {commodity.needed}")
     commodity_needed_most: Commodity = sorted_commodities[0]
     return system, commodity_needed_most
 
@@ -43,8 +40,8 @@ def get_cheapest_and_oldest(commodity_needed_most: Commodity, system: str) -> tu
     return cheapest_market, oldest_market
 
 
-def get_commodity_and_market(logger: Logger) -> tuple[Commodity, Market]:
-    system, commodity_needed_most = get_system_and_commodity(logger)
+def get_commodity_and_market() -> tuple[Commodity, Market]:
+    system, commodity_needed_most = get_system_and_commodity()
     cheapest_market, oldest_market = get_cheapest_and_oldest(commodity_needed_most, system)
     use_oldest: bool = oldest_market.age.days > get_days_since_weekly_maintenance()
     return commodity_needed_most, oldest_market if use_oldest else cheapest_market
@@ -54,7 +51,7 @@ def main():
     logger = init_logger()
     logger.info("Starting ...")
     logger.info(f"It has been {get_days_since_weekly_maintenance()} days since weekly server maintenance")
-    commodity, market = get_commodity_and_market(logger)
+    commodity, market = get_commodity_and_market()
     profit_margin = (100 * (commodity.payment - market.price) / commodity.payment)
     logger.info(f'Target market is "{market.station}" in the "{market.system}" system')
     logger.info(f"Profit margin: {profit_margin:.2f}%")
