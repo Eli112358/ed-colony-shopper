@@ -1,5 +1,6 @@
 from datetime import timedelta, datetime
 from functools import cache
+from importlib.metadata import version
 from logging import getLogger, basicConfig, INFO, Logger
 
 import xerox
@@ -7,6 +8,7 @@ import xerox
 from ed_colony_shopper.needed import collect_needed_commodities, Commodity
 from ed_colony_shopper.search import search_inara, Market
 
+PROJECT_NAME: str = "ed_colony_shopper"
 SERVER_MAINTENANCE_WEEKDAY: int = 3 # Thursday
 
 
@@ -63,7 +65,8 @@ def get_commodity_and_market() -> tuple[Commodity, Market]:
 
 def main():
     logger = init_logger()
-    logger.info("Starting ...")
+    version_str: str = version(PROJECT_NAME)
+    logger.info(f"Starting v{version_str} ...")
     logger.info(f"It has been {get_days_since_weekly_maintenance()} days since weekly server maintenance")
     commodity, market = get_commodity_and_market()
     profit_margin = (100 * (commodity.payment - market.price) / commodity.payment)
