@@ -49,9 +49,8 @@ def main():
     logger.info(f"It has been {get_days_since_weekly_maintenance()} days since weekly server maintenance")
     system, commodity_needed_most = get_system_and_commodity(logger)
     cheapest_market, oldest_market = get_cheapest_and_oldest(commodity_needed_most, system)
-    target_market = cheapest_market
-    if oldest_market.age > timedelta(days=7):
-        target_market = oldest_market
+    use_oldest: bool = oldest_market.age.days > get_days_since_weekly_maintenance()
+    target_market = oldest_market if use_oldest else cheapest_market
     profit_margin = (100 * (commodity_needed_most.payment - target_market.price) / commodity_needed_most.payment)
     logger.info(f'Target market is "{target_market.station}" in the "{target_market.system}" system')
     logger.info(f"Profit margin: {profit_margin:.2f}%")
