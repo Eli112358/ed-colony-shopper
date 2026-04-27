@@ -72,7 +72,7 @@ def main():
     profit_margin = (100 * (commodity.payment - market.price) / commodity.payment)
     logger.info(f'Target market is "{market.station}" in the "{market.system}" system')
     logger.info(f"Profit margin: {profit_margin:.2f}%")
-    logger.info(f"Need {commodity.needed} more {commodity.name}")
+    logger.info(f"Need {commodity.needed:,} more {commodity.name}")
     logger.info("Data age: {} {}".format(*get_age_message(market.age)))
     xerox.copy(market.system)
     logger.info("Target system name has been copied into clipboard")
