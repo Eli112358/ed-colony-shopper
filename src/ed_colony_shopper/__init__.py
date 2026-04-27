@@ -43,17 +43,21 @@ def get_cheapest_and_oldest(commodity_needed_most: Commodity, system: str) -> tu
     return cheapest_market, oldest_market
 
 
+def get_commodity_and_market(logger: Logger) -> tuple[Commodity, Market]:
+    system, commodity_needed_most = get_system_and_commodity(logger)
+    cheapest_market, oldest_market = get_cheapest_and_oldest(commodity_needed_most, system)
+    use_oldest: bool = oldest_market.age.days > get_days_since_weekly_maintenance()
+    return commodity_needed_most, oldest_market if use_oldest else cheapest_market
+
+
 def main():
     logger = init_logger()
     logger.info("Starting ...")
     logger.info(f"It has been {get_days_since_weekly_maintenance()} days since weekly server maintenance")
-    system, commodity_needed_most = get_system_and_commodity(logger)
-    cheapest_market, oldest_market = get_cheapest_and_oldest(commodity_needed_most, system)
-    use_oldest: bool = oldest_market.age.days > get_days_since_weekly_maintenance()
-    target_market = oldest_market if use_oldest else cheapest_market
-    profit_margin = (100 * (commodity_needed_most.payment - target_market.price) / commodity_needed_most.payment)
-    logger.info(f'Target market is "{target_market.station}" in the "{target_market.system}" system')
+    commodity, market = get_commodity_and_market(logger)
+    profit_margin = (100 * (commodity.payment - market.price) / commodity.payment)
+    logger.info(f'Target market is "{market.station}" in the "{market.system}" system')
     logger.info(f"Profit margin: {profit_margin:.2f}%")
-    logger.info(f"Need {commodity_needed_most.needed} more {commodity_needed_most.name}")
-    xerox.copy(target_market.system)
+    logger.info(f"Need {commodity.needed} more {commodity.name}")
+    xerox.copy(market.system)
     logger.info("Target system name has been copied into clipboard")
