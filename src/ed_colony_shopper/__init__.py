@@ -1,10 +1,19 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
+from functools import cache
 from logging import getLogger, basicConfig, INFO, Logger
 
 import xerox
 
 from ed_colony_shopper.needed import collect_needed_commodities, Commodity
 from ed_colony_shopper.search import search_inara, Market
+
+SERVER_MAINTENANCE_WEEKDAY: int = 3 # Thursday
+
+
+@cache
+def get_days_since_weekly_maintenance() -> int:
+    current_weekday = datetime.now().weekday()
+    return (7 + current_weekday - SERVER_MAINTENANCE_WEEKDAY) % 7
 
 
 def init_logger() -> Logger:
@@ -26,6 +35,7 @@ def get_system_and_commodity(logger: Logger) -> tuple[str, Commodity]:
 def main():
     logger = init_logger()
     logger.info("Starting ...")
+    logger.info(f"It has been {get_days_since_weekly_maintenance()} days since weekly server maintenance")
     system, commodity_needed_most = get_system_and_commodity(logger)
     markets: list[Market] = search_inara(system, commodity_needed_most.name, strict_star_dist=True)
     oldest_market = Market("", "", 0, 0.0, 0, 0, timedelta(0))
